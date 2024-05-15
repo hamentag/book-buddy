@@ -12,62 +12,69 @@ export default function Books(){
         async function getBooks() {
           try{
             const APIResponse = await fetchAllbooks();
+            console.log(APIResponse)
             setBooks(APIResponse.books);
           } catch(err){
-            setError(APIResponse.error.message);
+            console.error(err)
+            setError("Oops Something went wrong!");
           }
         }
         getBooks();
       }, []);
 
-      const booksToDisplay = searchParam
-      ? books.filter((book) =>
+      const booksToDisplay = searchParam ? 
+        books.filter((book) =>
           book.title.toLowerCase().includes(searchParam)
         )
-      : books;
+        : books;
   
       const numBooks = booksToDisplay.length;
   
     return(
-        <div>
-            <div>
-                <label>
-                    Search:{" "}
-                    <input
-                        type="text"
-                        placeholder="search"
-                        onChange={(e) => setSearchParam(e.target.value.toLowerCase())}
-                    />
-                </label>
-                {searchParam &&
-                    <p>
-                        {numBooks === 0 ? <span>No results match</span>
-                            : numBooks === 1 ? <span><b>{numBooks}</b> result matches </span>
-                                : <span><b>{numBooks}</b> results match </span>} your search criteria
-                    </p>
-                }
-                {!searchParam &&
-                    <h3>
-                        Total number of books: {numBooks}
-                    </h3>
-                }
-            </div>
+        <>
             {error && <p>{error}</p>}
-            <ol className="display-books">
-                {booksToDisplay.map((book) => {
-                    return(
-                        <li key={book.id}>
-                            <h4>{book.title}</h4>
-                            <button
-                                onClick={() => {
-                                navigate(`/${book.id}`);
-                                }}
-                            >
-                                See-Details
-                            </button>
-                        </li>)
-                })}
-            </ol>
-        </div>
+            {!error &&
+                <div>
+                    <div>
+                        <label>
+                            Search:{" "}
+                            <input
+                                type="text"
+                                placeholder="search"
+                                onChange={(e) => setSearchParam(e.target.value.toLowerCase())}
+                            />
+                        </label>
+                        {searchParam &&
+                            <p>
+                                {numBooks === 0 ? <span>No results match</span>
+                                    : numBooks === 1 ? <span><b>{numBooks}</b> result matches </span>
+                                        : <span><b>{numBooks}</b> results match </span>} your search criteria
+                            </p>
+                        }
+                        {!searchParam &&
+                            <h3>
+                                Total number of books: {numBooks}
+                            </h3>
+                        }
+                    </div>
+
+                    <ol className="display-books">
+                        {booksToDisplay.map((book) => {
+                            return (
+                                <li key={book.id}>
+                                    <h4>{book.title}</h4>
+                                    <button
+                                        onClick={() => {
+                                            navigate(`/${book.id}`);
+                                        }}
+                                    >
+                                        See-Details
+                                    </button>
+                                </li>)
+                        })}
+                    </ol>
+                </div>
+            }
+        </>
     )
 }
