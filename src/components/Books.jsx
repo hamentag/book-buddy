@@ -1,18 +1,16 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { fetchAllbooks } from "../api";
+import BookCard from "./BookCard"
 
-export default function Books(){
+export default function Books({token}){
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
     const [searchParam, setSearchParam] = useState("");
-    const navigate = useNavigate();
 
     useEffect(() => {
         async function getBooks() {
           try{
             const APIResponse = await fetchAllbooks();
-            console.log(APIResponse)
             setBooks(APIResponse.books);
           } catch(err){
             console.error(err)
@@ -35,7 +33,7 @@ export default function Books(){
             {error && <p>{error}</p>}
             {!error &&
                 <div>
-                    <div>
+                    <div className="header">
                         <label>
                             Search:{" "}
                             <input
@@ -58,21 +56,11 @@ export default function Books(){
                         }
                     </div>
 
-                    <ol className="display-books">
-                        {booksToDisplay.map((book) => {
-                            return (
-                                <li key={book.id}>
-                                    <h4>{book.title}</h4>
-                                    <button
-                                        onClick={() => {
-                                            navigate(`/${book.id}`);
-                                        }}
-                                    >
-                                        See-Details
-                                    </button>
-                                </li>)
+                    <ul className="display-books">
+                        {booksToDisplay.map((book,index) => {
+                            return  <BookCard key={book.id} token={token} book={book} index={index} />  
                         })}
-                    </ol>
+                    </ul>
                 </div>
             }
         </>

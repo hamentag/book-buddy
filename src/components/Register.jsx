@@ -49,7 +49,7 @@ export default function Register() {
         successMsg ? 
             <>
                 <p>{successMsg}</p>
-                <button onClick={()=>{navigate('/login')}}>Login</button>
+                <button onClick={()=>{navigate('/login')}}>OK</button>
             </>
             :   <form onSubmit={handleSubmit}>
                     <h3>New User</h3>

@@ -45,7 +45,7 @@ export default function Login({ token, setToken }) {
             <h3>Login</h3>
             {token && !successMsg &&
                 <>
-                    <p>You already login</p>
+                    <p>You are Already Logged in</p>
                     <button onClick={() => { setToken(null) }}>Log In as another User</button>
                 </>
             }
@@ -77,7 +77,6 @@ export default function Login({ token, setToken }) {
                     <div>
                         <p>Don't have an acount? <span className="register-key" onClick={() => { navigate(`/register`); }}>Register</span></p>
                     </div>
-
                 </>
             }
             {successMsg &&
@@ -86,7 +85,6 @@ export default function Login({ token, setToken }) {
                     <button onClick={() => { navigate(`/`); }}>Home</button>
                 </div>
             }
-
         </>
     );
 }

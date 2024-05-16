@@ -5,6 +5,7 @@ export default function Navigations() {
     <div className="nav-bar">
       <Link to="/">Home</Link>
       <Link to="/login">Login/Register</Link>
+      <Link to="/account">My Account</Link>
     </div>
   );
 }
