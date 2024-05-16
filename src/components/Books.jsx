@@ -1,74 +1,61 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { fetchAllbooks } from "../api";
 import BookCard from "./BookCard"
 
-export default function Books({token}){
+export default function Books({token, setMsg}){
     const [books, setBooks] = useState([]);
-    const [error, setError] = useState(null);
-    const [message, setMessage] = useState(null)
     const [searchParam, setSearchParam] = useState("");
+    const [availFilter, setAvailFilter] = useState(null); // Checkbox input state for "Show Only Available Books" option
+    const [error, setError] = useState(null);
+    const [isLoading, setIsLoading] = useState(true)
+    const [checkedOut, setCheckedOut] = useState(null);  // useEffect dependency : re-execute the effect when a book is checked out
 
     useEffect(() => {
         async function getBooks() {
           try{
             const APIResponse = await fetchAllbooks();
             setBooks(APIResponse.books);
+            setIsLoading(false);
           } catch(err){
             console.error(err)
             setError("Oops Something went wrong!");
           }
         }
         getBooks();
-      }, []);
+    }, [checkedOut]);
 
+    //
+    const searchedBooks = searchParam ? 
+    books.filter(book =>
+        book.title.toLowerCase().includes(searchParam)
+    )
+    : books;
 
+    //
+    const booksToDisplay = availFilter?
+    searchedBooks.filter(book => book.available === true)
+    : searchedBooks;
 
-      const booksToDisplay = searchParam ? 
-        books.filter((book) =>
-          book.title.toLowerCase().includes(searchParam)
-        )
-        : books;
-  
-      const numBooks = booksToDisplay.length;
+    //
+    const numBooks = booksToDisplay.length;
 
-
-      //// Handle message box
-      const ref = useRef();
-      const ref2 = useRef();
-
-      useEffect(() => {
-          ref.current.style.backgroundColor = message? "green" : "blue";
-          ref.current.style.display = message? "block" : "none";
-          ref.current.style.transform = message? "translate(-50%, -50%) scale(1)" : "translate(-50%, -50%) scale(0)";
-
-         
-      }, [message]);
-
-      useEffect(() => {
-        ref2.current.style.opacity = message? "1" : "0"
-        ref2.current.style.pointerEvents = message? "all" : "none"
-       
-    }, [message]);
-
-    ////
-
-  
+    
+    if(isLoading){
+        return <section className="loading">Loading..</section>
+    }
+    
     return(
-        <>
-
-            <div ref={ref} className="dialog-box">
-                <div className="dialog-box-main">
-                    <p>TSt ,,,, tst ,,,,,</p>
-                    <button onClick={()=>{setMessage(null)}}>Close</button>
-                </div>
-            </div>
-            <div ref={ref2} className="overlay"></div>
-
-
+        <div className="home">
+           <div className="avail-option">
+            <label>
+                    <input type="checkbox" id="avail" onChange={(e)=>setAvailFilter(e.target.checked)} />
+                    {" "} Show Only Available Books
+                </label>
+           </div>
             {error && <p>{error}</p>}
             {!error &&
                 <div>
-                    <div className="header">
+                    <div className="search-header">
                         <label>
                             Search:{" "}
                             <input
@@ -86,18 +73,18 @@ export default function Books({token}){
                         }
                         {!searchParam &&
                             <h3>
-                                Total number of books: {numBooks}
+                                Number of {availFilter? <span>Available</span> : <span>All the</span>} Books in the Library: {numBooks}
                             </h3>
                         }
                     </div>
 
                     <ul className="display-books">
                         {booksToDisplay.map((book,index) => {
-                            return  <BookCard key={book.id} token={token} book={book} index={index} setMessage={setMessage}/>  
+                            return  <BookCard key={book.id} token={token} book={book} index={index} setMsg={setMsg} setCheckedOut={setCheckedOut} />  
                         })}
                     </ul>
                 </div>
             }
-        </>
+        </div>
     )
 }

@@ -26,39 +26,42 @@ export default function SingleBook(){
 
             {
                 book && (
-                    <>
+                    <div>
                         <h5>Detailed info about {book.title}</h5>
-                        <img
-                            src={book.coverimage}
-                            alt="Coverimage is not available"
-                            height={270}
-                        />
-
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th scope="row">ID: </th>
-                                    <td>{book.id}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Title: </th>
-                                    <td>{book.title}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Author: </th>
-                                    <td>{book.author}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Description: </th>
-                                    <td>{book.description}</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">Availability: </th>
-                                    <td>{book.available? <span>Yes</span> : <span>No</span>}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </>
+                        <div className="single-book">
+                            <img
+                                src={book.coverimage}
+                                alt="Coverimage is not available"
+                                height={270}
+                            />
+                            <div>
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <th scope="row">ID</th>
+                                        <td>{book.id}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Title</th>
+                                        <td>{book.title}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Author</th>
+                                        <td>{book.author}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Description</th>
+                                        <td>{book.description}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Availability</th>
+                                        <td>{book.available ? <span>Yes</span> : <span>No</span>}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                    </div>
                 )
             }
         </div>

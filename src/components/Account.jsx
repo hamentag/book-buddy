@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
 import { fetchUser } from "../api";
 
-export default function Account({token}){
+export default function Account({token, setNextPath}){
     const [user, setUser] = useState({}); 
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
+
     const navigate = useNavigate();
+    const location = useLocation();
 
     useEffect(() => {
     async function getUserAccount() {
@@ -15,12 +18,8 @@ export default function Account({token}){
           if(APIResponse.id){
             setUser(APIResponse)
             setBooks(APIResponse.books)
-
-            console.log(APIResponse.id);
-            console.log(APIResponse.books);
             }
             else{
-                console.log("no id ")
                 setError(APIResponse.message)
             }    
         } catch(err){
@@ -32,58 +31,63 @@ export default function Account({token}){
       if(token){
         getUserAccount();       
     }
-    }, []);
+    }, [token]);
 
-   
-    ///
     
     return(
-        <>{token?
+        <div className='account'>{token?
             <>
                 {error && <p>{error}</p>}
                 {!error && 
-                    <>Account heere .. 
+                    <>
                         {
                             user && 
-                            <table>
+                            <table className='account-info'>
                             <tbody>
                                 <tr>
-                                    <th scope="row">ID: </th>
+                                    <th scope="row">ID</th>
                                     <td>{user.id}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">First Name: </th>
+                                    <th scope="row">First Name</th>
                                     <td>{user.firstname}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Last Name: </th>
+                                    <th scope="row">Last Name</th>
                                     <td>{user.lastname}</td>
                                 </tr>
                                 <tr>
-                                    <th scope="row">Email: </th>
+                                    <th scope="row">Email</th>
                                     <td>{user.email}</td>
                                 </tr> 
                                 <tr>
-                                    <th scope="row">Books: </th>
-                                    <td>
-                                        <table>
-                                            <tbody>
-                                                <tr>
-                                            <th >Title: </th>
-                                        <th >Author: </th>
-                                        <th >ID: </th>
-                                        <th >Availability: </th>
-                                        </tr>
-                                            {
-                                                books.map((book) => { return <tr key={book.id}>
-                                                        <td>{book.title}</td>
-                                                        <td>{book.author}</td>
-                                                        <td>{book.id}</td>
-                                                        <td>{book.available? <span>Yes</span> : <span>No</span>}</td>                                                   
-                                                   </tr>})
-                                            }
-                                            </tbody>
-                                        </table>                                       
+                                    <th scope="row">Books</th>
+                                    <td className='book-info'>
+                                        {
+                                            books.length?
+                                                <table className='book-table'>
+                                                    <tbody>
+                                                        <tr>
+                                                            <th></th>
+                                                            <th >Title</th>
+                                                            <th >Author</th>
+                                                            <th >ID</th>
+                                                            <th >Availability</th>
+                                                        </tr>
+                                                        {
+                                                            books.map((book,index) => { return <tr key={book.id}>
+                                                                    <td>{index + 1}</td>
+                                                                    <td>{book.title}</td>
+                                                                    <td>{book.author}</td>
+                                                                    <td>{book.id}</td>
+                                                                    <td>{book.available? <span>Yes</span> : <span>No</span>}</td>                                                   
+                                                            </tr>})
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                :
+                                                <p>No reservations found for this account.</p>
+                                        }                                      
                                     </td>
                                 </tr> 
                             </tbody>
@@ -94,10 +98,14 @@ export default function Account({token}){
             </>
 
             : <>
-                <p>"Need to log in"</p>
-                <button onClick={()=>{navigate('/login')}}>LogIn</button>           
+                <p>Please sign in to explore your account information.</p>
+                <button className='login-btn' 
+                        onClick={()=>{
+                            setNextPath(location.pathname);
+                            navigate('/login')
+                        }}>Log In</button>
             </>
         }
-        </>
+        </div>
     )
 }

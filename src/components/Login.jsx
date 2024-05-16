@@ -1,12 +1,13 @@
+
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginRequest } from "../api";
+import {setCookie} from '../cookie/cookie'
 
-export default function Login({ token, setToken }) {
+export default function Login({ token, setToken, setMsg, nextPath}) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
-    const [successMsg, setSuccessMsg] = useState(null);
 
     const navigate = useNavigate();
 
@@ -17,14 +18,25 @@ export default function Login({ token, setToken }) {
             try {
                 const APIData = await loginRequest(email, password);
                 if (APIData.token) {
-                    console.log(APIData.token)
                     setToken(APIData.token)
+                    // storing token in cookie (expires in 3 days)
+                    setCookie("token", APIData.token, 3);                    
+                    
+                    setMsg({
+                        msgTxt: APIData.message,
+                        propo: <button
+                                onClick={() => {  navigate('/account'); setMsg(null) }}
+                                >See Account
+                                </button>,
+                    });
 
-                    setSuccessMsg(APIData.message);
-
+                    // Clear inpu fields
                     setError(null);
                     setEmail("");
                     setPassword("");
+
+                    // Go to the page you came from
+                    navigate(nextPath);
 
                 }
                 else {
@@ -34,57 +46,49 @@ export default function Login({ token, setToken }) {
                 console.error(err)
             }
         }
-        else {
-            setError("All fields marked with an asterisk (*) are mandatory.");
+        else if (!email && !password){
+            setError("Please fill out both the email and password fields to proceed.");
+        }
+        else if (!email){
+            setError("Kindly fill out the email field to continue.");
+        }
+        else{
+            setError("Password is required to proceed.");            
         }
     }
 
-
     return (
-        <>
-            <h3>Login</h3>
-            {token && !successMsg &&
-                <>
-                    <p>You are Already Logged in</p>
-                    <button onClick={() => { setToken(null) }}>Log In as another User</button>
-                </>
-            }
-
+        <div className="login-card">
             {!token &&
                 <>
+                    <h3>Sign in</h3>
                     <form onSubmit={handleSubmit}>
-                        {error && <p className="error">{error}</p>}
-                        <div className="fields">
-                            <label>Email*
+                        
+                        <div className="login-fields">
+                           
                                 <input value={email}
                                     type="email"
                                     name="email"
-                                    placeholder="--Email--"
+                                    placeholder="*Email"
                                     onChange={(e) => setEmail(e.target.value)}
                                 />
-                            </label>
-                            <label>Password*
+                        
                                 <input value={password}
                                     type="text"
                                     name="password"
-                                    placeholder="--Password--"
+                                    placeholder="*Password"
                                     onChange={(e) => setPassword(e.target.value)}
                                 />
-                            </label>
                         </div>
                         <button>Log In</button>
-                    </form>
-                    <div>
-                        <p>Don't have an acount? <span className="register-key" onClick={() => { navigate(`/register`); }}>Register</span></p>
+                        <div>
+                        <p style={{fontSize: '12px',}}>Don't have an account? <span className="register-key" onClick={() => { navigate(`/register`); }}>Register</span></p>
                     </div>
+                    </form>
+                    {error && <p className="error">{error}</p>}
+                    
                 </>
             }
-            {successMsg &&
-                <div>
-                    <p>{successMsg}</p>
-                    <button onClick={() => { navigate(`/`); }}>Home</button>
-                </div>
-            }
-        </>
+        </div>
     );
 }

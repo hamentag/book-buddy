@@ -14,14 +14,9 @@ export default function Register() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-
         if (email && password) {
-
             try {
                 const APIData = await createAccount(firstName, lastName, email, password);
-                console.log(APIData)
-                console.log(APIData.message)
-                console.log(APIData.token)
                 if (APIData.token) {
                     setSuccessMsg(APIData.message)                    
 
@@ -43,7 +38,6 @@ export default function Register() {
             setError("All fields marked with an asterisk (*) are mandatory.");
         }
     }
-    //
 
     return (
         successMsg ? 
@@ -51,49 +45,44 @@ export default function Register() {
                 <p>{successMsg}</p>
                 <button onClick={()=>{navigate('/login')}}>OK</button>
             </>
-            :   <form onSubmit={handleSubmit}>
+            :   <form onSubmit={handleSubmit} className="register-form"> 
                     <h3>New User</h3>
                     {error && <p className="error">{error}</p>}
-                    <div className="fields">
-                        <label>First Name
+                    <div className="register-fields">
+                        
                             <input
                                 value={firstName}
                                 type="text"
                                 name="firstName"
-                                placeholder="--First Name--"
+                                placeholder="First Name"
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
-                        </label>
-                        <label>Last Name
+                      
                             <input
                                 value={lastName}
                                 type="text"
                                 name="lastName"
-                                placeholder="--Last Name--"
+                                placeholder="Last Name"
                                 onChange={(e) => setLastName(e.target.value)}
                             />
-                        </label>
-                        <label>Email*
+                       
                             <input
                                 value={email}
                                 type="email"
                                 name="email"
-                                placeholder="--Email--"
+                                placeholder="*Email"
                                 onChange={(e) => setEmail(e.target.value)}
                             />
-                        </label>
-                        <label>Password*
+                       
                             <input
                                 value={password}
                                 type="text"
                                 name="password"
-                                placeholder="--Password--"
+                                placeholder="*Password"
                                 onChange={(e) => setPassword(e.target.value)}
                             />
-                        </label>
                     </div>
                 <button>Submit</button>
             </form>
-        
     )
 }
