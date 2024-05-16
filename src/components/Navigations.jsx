@@ -6,6 +6,7 @@ export default function Navigations() {
       <Link to="/">Home</Link>
       <Link to="/login">Login/Register</Link>
       <Link to="/account">My Account</Link>
+      <Link to="/reservations">My Reservations</Link>
     </div>
   );
 }

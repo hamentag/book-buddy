@@ -8,7 +8,7 @@ import SingleBook from './components/SingleBook'
 import Register from './components/Register'
 import Login from './components/Login'
 import Account from './components/Account'
-
+import Reservations from './components/Reservations'
 
 function App() {
   const [token, setToken] = useState(null)
@@ -22,7 +22,8 @@ function App() {
         <Route path="/:id" element={<SingleBook />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login token={token} setToken={setToken} />}/>
-        <Route path="/account" element={<Account token={token} />} />
+        <Route path="/account" element={<Account token={token} />} /> 
+        <Route path="/reservations" element={<Reservations token={token} />} /> 
       </Routes>
       </div>
   )

@@ -9,7 +9,6 @@ return fetch(`${baseUrl}/books`, {
     .catch(console.error);
 }
 
-//
 export async function fetchSingleBook(id){
 return fetch(`${baseUrl}/books/${id}`, {
     headers: {
@@ -62,7 +61,7 @@ return fetch(`${baseUrl}/users/me`, {
 }
 
 
-export async function updateBook(token, bookId, action){
+export async function updateBookAv(token, bookId, action){
 console.log(action)
 return fetch(`${baseUrl}/books/${bookId}`, {   
     method: "PATCH",
@@ -78,7 +77,18 @@ return fetch(`${baseUrl}/books/${bookId}`, {
 }
 
 export async function fetchReservations(token){
-return fetch( `${baseUrl}/reservations`, {
+return fetch(`${baseUrl}/reservations`, {
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    }).then(response => response.json())
+    .catch(console.error);
+}
+
+export async function deleteReservation(token, reservationId){
+return fetch(`${baseUrl}/reservations/${reservationId}`, {
+    method: "DELETE",
     headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`

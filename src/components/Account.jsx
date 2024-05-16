@@ -1,16 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-
 import { fetchUser } from "../api";
-import { fetchReservations } from "../api";
-
 
 export default function Account({token}){
     const [user, setUser] = useState({}); 
     const [books, setBooks] = useState([]);
-
     const [error, setError] = useState(null);
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -39,26 +34,7 @@ export default function Account({token}){
     }
     }, []);
 
-    ///
-    useEffect(() => {
-        async function getReservations() {
-            try{
-              const APIResponse = await fetchReservations(token);
-              console.log(APIResponse)
-             
-            } catch(err){
-              console.error(err)
-              setError("Oops Something went wrong!");
-            }
-          }
-    
-          if(token){
-            getReservations();       
-        }
-        }, []);
-    
-
-
+   
     ///
     
     return(

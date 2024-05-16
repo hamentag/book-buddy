@@ -1,20 +1,35 @@
+import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
-import { updateBook } from "../api";
+import { updateBookAv } from "../api";
 
-export default function BookCard({token, book, index}){
+
+export default function BookCard({token, book, index, setMessage}){
+    const [error, setError] = useState(null)
     const navigate = useNavigate();
 
-    async function checkOut(bookId){
-        try{
-            const apiData = await updateBook(token, bookId, false);
-            console.log(apiData)
-    
-        } catch (err) {
-            console.error(err)
+    async function checkOut(){
+        if(token){
+            if(book.available){
+                try{
+                    const apiData = await updateBookAv(token, book.id, false);
+                    console.log(apiData)
+            
+                } catch (err) {
+                    console.error(err)
+                }            
+            }
+            else{
+                setError("Not avail...")
+                setMessage("pr..Not avail...")
+            }
+        }
+        else{
+            setError("Login to check out item")
         }
     }
 
     return (
+        
         <li key={book.id} className="book-presentation">
             <h5>{index + 1}. {book.title}</h5>
             <img
@@ -33,10 +48,11 @@ export default function BookCard({token, book, index}){
                 </button>
                 <button
                     onClick={() => {
-                        checkOut(book.id)
+                        checkOut()
                     }}
                 >Check Out
                 </button>
+                {error && <p>{error}</p>}
             </div>
             
         </li>

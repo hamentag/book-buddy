@@ -68,3 +68,31 @@ h5{
 .buttons button{
   width: 7rem;
 }
+.dialog-box{
+  background-color: rgb(154, 90, 215);
+  border: 1px solid rgb(101, 101, 101);
+  border-radius: 5px;
+  width: 65%;
+  /* margin: 5px auto; */
+
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  transition: 200ms ease-in-out;
+  z-index: 10;
+  background-color: white;
+  width: 680px;
+}
+
+.overlay{
+  position: fixed;
+  opacity: 0;
+  transition: 200ms ease-in-out;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(63, 63, 63, 0.457);
+  pointer-events: none;
+}

@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { fetchAllbooks } from "../api";
 import BookCard from "./BookCard"
 
 export default function Books({token}){
     const [books, setBooks] = useState([]);
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null)
     const [searchParam, setSearchParam] = useState("");
 
     useEffect(() => {
@@ -20,6 +21,8 @@ export default function Books({token}){
         getBooks();
       }, []);
 
+
+
       const booksToDisplay = searchParam ? 
         books.filter((book) =>
           book.title.toLowerCase().includes(searchParam)
@@ -27,9 +30,41 @@ export default function Books({token}){
         : books;
   
       const numBooks = booksToDisplay.length;
+
+
+      //// Handle message box
+      const ref = useRef();
+      const ref2 = useRef();
+
+      useEffect(() => {
+          ref.current.style.backgroundColor = message? "green" : "blue";
+          ref.current.style.display = message? "block" : "none";
+          ref.current.style.transform = message? "translate(-50%, -50%) scale(1)" : "translate(-50%, -50%) scale(0)";
+
+         
+      }, [message]);
+
+      useEffect(() => {
+        ref2.current.style.opacity = message? "1" : "0"
+        ref2.current.style.pointerEvents = message? "all" : "none"
+       
+    }, [message]);
+
+    ////
+
   
     return(
         <>
+
+            <div ref={ref} className="dialog-box">
+                <div className="dialog-box-main">
+                    <p>TSt ,,,, tst ,,,,,</p>
+                    <button onClick={()=>{setMessage(null)}}>Close</button>
+                </div>
+            </div>
+            <div ref={ref2} className="overlay"></div>
+
+
             {error && <p>{error}</p>}
             {!error &&
                 <div>
@@ -58,7 +93,7 @@ export default function Books({token}){
 
                     <ul className="display-books">
                         {booksToDisplay.map((book,index) => {
-                            return  <BookCard key={book.id} token={token} book={book} index={index} />  
+                            return  <BookCard key={book.id} token={token} book={book} index={index} setMessage={setMessage}/>  
                         })}
                     </ul>
                 </div>
