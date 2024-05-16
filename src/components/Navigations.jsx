@@ -4,7 +4,7 @@ export default function Navigations() {
   return (
     <div className="nav-bar">
       <Link to="/">Home</Link>
-      <Link to="/register">Register</Link>
+      <Link to="/login">Login/Register</Link>
     </div>
   );
 }

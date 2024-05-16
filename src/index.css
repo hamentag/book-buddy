@@ -15,3 +15,11 @@ body {
   justify-content: space-evenly;
 
 }
+
+.register-key{
+  color: rgb(37, 37, 212);
+  cursor: pointer;
+}
+.register-key:hover{
+  color: rgb(90, 191, 44);
+}
