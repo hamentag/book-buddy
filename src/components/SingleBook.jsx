@@ -27,7 +27,7 @@ export default function SingleBook(){
             {
                 book && (
                     <div>
-                        <h5>Detailed info about {book.title}</h5>
+                        <h5>Detailed info about "{book.title}"</h5>
                         <div className="single-book">
                             <img
                                 src={book.coverimage}
